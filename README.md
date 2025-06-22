@@ -149,40 +149,27 @@ umount /comp3601/usb
 Once unmounted successfully from the KRIA board, connect to your computer and play the .wav file output.
 Currently we have an issue where the audio is not playing properly but will be working on fixing it as soon as possible.
 
-## Extension for speaker 
+## Extension for Speaker
 
-### Additional components used 
+### Additional Components Used
+- I2S amp soldered to speaker  
+- All other components remain the same as the main pipeline
 
-- i2s amp soldered to speaker
-- other components were the same
+### Additional VHDL Files Added
+- **i2s_master_speaker.vhd**: Manages I2S data transmission to the speaker using `bclk` and `lrcl` clocks. Handles data transfer from FIFO to the I2S amp.
+- **FIFO**: Same component as the microphone input, instantiated separately in the audio pipeline for independent operation.
+- **audio_pipeline.vhd**: Extended to support speaker output.
+- **params.vhd**: Updated with parameters to support speaker integration in the pipeline.
 
-### Additional vhdl files added
+### Additional Software Files Added
 
-i2s_master_speaker.vhd: Manages I2S data transmission to speaker by using bclk and lrcl clocks and handling data transfer from FIFO buffer to i2s amp connected to the speaker.
+- **axi_dma.c/h**: Handles DMA operations for audio data transfer between memory and FPGA. A modified version (`driver_axi_dma.c/h`) is used for speaker output.
+- **audio_i2s.c/h**: Manages the I2S protocol. Two versions are used: one for the microphone (`audio_i2s`) and another (`driver_audio_i2s`) for the speaker.
+- **wav.c/h**: Converts raw audio into `.wav` format.
+- **convert_audio.c/h**: Strips headers and prepares audio data for further processing (`audio_data.c` is also involved).
+- **main.c**: Reads microphone input via S2MM data channel in AXI DMA and stores it as a `.wav` file.
+- **main_s.c**: Reads audio from a `.wav` file and transmits it to the speaker using the MM2S data channel and `driver_audio_i2s`.
 
-FIFO : We use same component as for mic input but it’s instantiated as a different component in audio pipeline. These two instances will operate separately.
+### Running the Extended System
 
-audio_pipeline.vhd has been extended for speaker and params.vhd file has also been modified for this to connect to the audio pipeline.
-
-### Additional software files added
-
-Software:
-
-axi_dma.c/h: This driver handles the Direct Memory Access (DMA) operations, crucial for moving audio data between memory and the FPGA. driver_axi_dma.c/h for speaker.
-
-audio_i2s.c/h: Manages the I2S protocol, which is used for audio data transmission.  We have two versions of this, one for i2s mic and the driver_audio_i2s for speaker.
-
-wav.c/h: Responsible for converting raw audio data into a .wav format, making it accessible and storable.
-convert_audio.c/h: Processes the .wav file by removing the file header, and preparing the audio data for further handling. (audio_data.c)
-
-main.c/main_s.c: main files for using functions in the other files to process the data during input from microphone and store in wav file, for speaker the main reads from wav file process to axi dma.
-
-main.c focuses on processing the data received from i2s microphone via S2MM data channel in the AXI DMA and storing it in the form of a wave file.
-
-main_s.c is responsible for using necessary functions from speaker drivers and making sure data is read from wav file and using driver_audio_i2s(speaker i2s) function to send data to the speaker i2s via MM2S data channel in axi dma.
-
-### Running the extended system
-
-1. Follow the same steps outlined earlier to run the code, but this time use main_s.c to start speaker playback.
-2. Module-level testing has confirmed that the VHDL data path functions correctly, and the software accurately processes audio samples from .wav files for output.
-3. Minor refinements are underway to improve the consistency of speaker playback.
+To run the extended system, follow the same steps outlined earlier, but use `main_s.c` to initiate speaker playback. Module-level testing has confirmed that the VHDL data path operates as expected, and the software successfully processes audio samples from `.wav` files for output. Minor refinements are in progress to further improve the reliability of speaker playback.
