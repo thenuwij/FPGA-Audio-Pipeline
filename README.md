@@ -151,12 +151,12 @@ Currently we have an issue where the audio is not playing properly but will be w
 
 ## Extension for speaker 
 
-# Additional components used 
+### Additional components used 
 
 - i2s amp soldered to speaker
 - other components were the same
 
-# Additional vhdl files added
+### Additional vhdl files added
 
 i2s_master_speaker.vhd: Manages I2S data transmission to speaker by using bclk and lrcl clocks and handling data transfer from FIFO buffer to i2s amp connected to the speaker.
 
@@ -164,7 +164,7 @@ FIFO : We use same component as for mic input but it’s instantiated as a diffe
 
 audio_pipeline.vhd has been extended for speaker and params.vhd file has also been modified for this to connect to the audio pipeline.
 
-# Additional software files added
+### Additional software files added
 
 Software:
 
@@ -181,7 +181,7 @@ main.c focuses on processing the data received from i2s microphone via S2MM data
 
 main_s.c is responsible for using necessary functions from speaker drivers and making sure data is read from wav file and using driver_audio_i2s(speaker i2s) function to send data to the speaker i2s via MM2S data channel in axi dma.
 
-# Running the extended system
+### Running the extended system
 
 1. Follow the same steps outlined earlier to run the code, but this time use main_s.c to start speaker playback.
 2. Module-level testing has confirmed that the VHDL data path functions correctly, and the software accurately processes audio samples from .wav files for output.
