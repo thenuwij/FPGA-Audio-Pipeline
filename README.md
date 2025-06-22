@@ -1,32 +1,24 @@
-# COMP3601project
-UNSW comp3601 project (i2s speaker and microphone)
+# FPGA Audio Pipeline
 
-## Group Members
+This project was developed in collaboration with [@ZhongtaiZzhang](https://github.com/ZhongtaiZzhang) and [@YuanxuSun](https://github.com/YuanxuSun), using the Kria KV260 FPGA to capture and process audio signals in real time. It was built as the final assessment for the course COMP3601.
 
-1. Yuanxu Sou (z5292226)
-2. Zhongtai Zhang (z5330019)
-3. Thenuja Wijesuriya (z5343238)
+## Project Description 
+
+This project captures audio input from a microphone connected to the Kria KV260 FPGA board, converts it into a .wav file, and exports it to a computer for playback. An extension is also in place to enable direct audio output through a connected speaker, supporting playback from .wav files stored on the device.
 
 ## Hardware Components Used 
 
 1. Pre-flashed Petalinux image with configured software and example bitstreams on SD card
-2. KriaKV260andpower supply, ethernet cable, USB cable
+2. Kria KV260 with power supply, ethernet cable, USB cable
 3. UNSWCSEDesignProject A/B PMODboard 
 4. Adafruit I2S MEMS microphone
-5. Output Specker (Will be connected later for Hardware Audio Output project extension)
-
+5. Output Speaker (Will be connected later for Hardware Audio Output project extension)
 
 ## Software Pre-requisites 
 
 1. Vitis Vivado 2021.1
    - During installation, you need to choose to install the full Vitis package as it will be needed later in this course.
 2. IfUbuntu: minicom, if Windows: Putty
-
-## Project Description 
-
-This project includes the comp3601 basic project requirement code, where we capture audio input from a microphone channel in out Hardware Kria KV260 Board and convert it to a .wav file and export it to the computer to be played. In our project extension we plan on connecting a speaker to output the sound captured directly from the hardware and also be able to play the sound from a .wave file.
-
-As of now the comp3601 basic requirements have been almost completed. We have come across some issues with the sound not being played clearly on the computer but are working on fixing the bugs as soon as possible by the next project update.
 
 ## Startup Instructions (Hardware Code)
 
@@ -77,9 +69,9 @@ Now click on Session, and choose Serial
 
 Now press “Open”, you should get a serial window. Click 'Reset' on the Kria board. Note there is often a long delay between the last OF message and the “Starting tcf-agent:” OK.
 
-## Conecting the USB drive to KRIA KV260 BOARD 
+## Connecting the USB drive to KRIA KV260 BOARD 
 
-A normal USB drive would not be comptible with our KRIA KV260 board, so please watch this youtube tutorial linked below to help convert the USB drive to FAT32 format, which will be accepted by the KRIA KV260 board.
+A normal USB drive would not be compatible with our KRIA KV260 board, so please watch this youtube tutorial linked below to help convert the USB drive to FAT32 format, which will be accepted by the KRIA KV260 board.
 
 [Click here to watch the USB drive format conversion video](https://www.youtube.com/watch?v=s4EX5DMEZH0&t=223s)
 
@@ -147,7 +139,7 @@ aarch64-xilinx-linux-g++ -g -Wall -O2 -std=c++11 -I include/ -c src/wave.c -o bu
 aarch64-xilinx-linux-g++ -o M4_output build/main.o build/audio_i2s.o build/axi_dma.o build/wave.o -lpthread -lz -rdynamic 
 on putty terminal
 
- 2. Once compiled, now run './M4_output' to start recording the sound. Once the sound has been recorded you will see a message aying a .wav output file has been created.
+ 2. Once compiled, now run './M4_output' to start recording the sound. Once the sound has been recorded you will see a message saying a .wav output file has been created.
 
 ## Unmount the USB drive from KRIA play .wav file on computer 
 
@@ -191,12 +183,6 @@ main_s.c is responsible for using necessary functions from speaker drivers and m
 
 # Running the extended system
 
-1. Use the same steps mentioned in the run your code files but this this the program will run using the main_s.c to start playback for speaker.
-2. Current speaker does not provide any output as expected.
-3. We have started the testing and debugging process and with new feedback received regarding testing the speaker components separately using the oscilloscope, we are confident we can fix this error if we had roughly around a week more to work on this project. Module testing has been completed at this stage and we can confirm using testbench outputs that the vhdl data path is working as expected and the software is processing data samples correctly from the waveform fles for the speaker.
-
-
-
-
-
-
+1. Follow the same steps outlined earlier to run the code, but this time use main_s.c to start speaker playback.
+2. Module-level testing has confirmed that the VHDL data path functions correctly, and the software accurately processes audio samples from .wav files for output.
+3. Minor refinements are underway to improve the consistency of speaker playback.
